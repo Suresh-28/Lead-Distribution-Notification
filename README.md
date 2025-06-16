@@ -1,4 +1,5 @@
 # Lead-Distribution-Notification
+![Workflow](https://github.com/user-attachments/assets/6c73e95c-e9f9-4d33-9b5d-ea0e8ab172f7)
 
 # Form Submission Email Router
 
