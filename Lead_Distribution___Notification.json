@@ -1,0 +1,453 @@
+{
+  "name": "Lead Distribution & Notification",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Tsest",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "First Name"
+            },
+            {
+              "fieldLabel": "Last Name"
+            },
+            {
+              "fieldLabel": "Email"
+            },
+            {
+              "fieldLabel": "Occupation",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Student"
+                  },
+                  {
+                    "option": "Engineer"
+                  },
+                  {
+                    "option": "Doctor"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -420,
+        -280
+      ],
+      "id": "9ee77224-7527-468e-a3ef-bddbc3e0c3f3",
+      "name": "On form submission",
+      "webhookId": "7daa50b8-4ead-42ea-9b16-4c590c7a7fa4"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1zKEqBo6R1mEjpcOzZVm5bGcO80zxe7dZr8oqYUksvkI",
+          "mode": "list",
+          "cachedResultName": "Test-spreed",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zKEqBo6R1mEjpcOzZVm5bGcO80zxe7dZr8oqYUksvkI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zKEqBo6R1mEjpcOzZVm5bGcO80zxe7dZr8oqYUksvkI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "First Name": "={{ $json['First Name'] }}",
+            "Last Name": "={{ $json['Last Name'] }}",
+            "Email": "={{ $json.Email }}",
+            "Occupation": "={{ $json.Occupation }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Occupation",
+              "displayName": "Occupation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -360,
+        -40
+      ],
+      "id": "9fa5096a-ae5c-4a8e-a8ab-63c2428653e6",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "mJjYGMcigvd3Wf7z",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "988db206-9079-4210-93c9-12fdaef36993",
+              "leftValue": "={{ $json.Occupation }}",
+              "rightValue": "=Student",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -160,
+        -240
+      ],
+      "id": "9611c4ac-c118-4ff2-91fb-c34483a838a0",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "352ac373-8321-4bf1-bab7-19ced8b1da78",
+                    "leftValue": "={{ $('On form submission').item.json.Occupation }}",
+                    "rightValue": "Engineer",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0bad4000-09cc-4db7-89f8-91e80a2afbeb",
+                    "leftValue": "={{ $('On form submission').item.json.Occupation }}",
+                    "rightValue": "Doctor",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "allMatchingOutputs": true
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -40,
+        -20
+      ],
+      "id": "35af3465-84e1-49e6-9d16-8dfe283bf1a2",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "sendTo": "=cryptobuffs90@gmail.com",
+        "subject": "Hi",
+        "message": "Doctor Lead",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        220,
+        120
+      ],
+      "id": "fe4c3186-be35-49fa-a09c-20ffbb94fad1",
+      "name": "Gmail",
+      "webhookId": "fac8c21c-7362-47a3-965b-2eeb8e5f511a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6U1ldeYrY6OURSnV",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "=sureshshyamala2812@gmail.com",
+        "subject": "Hello",
+        "message": "Engineer Lead",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        220,
+        -100
+      ],
+      "id": "21961c5b-3009-4a4e-97e9-9757d9fc702d",
+      "name": "Gmail1",
+      "webhookId": "fac8c21c-7362-47a3-965b-2eeb8e5f511a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6U1ldeYrY6OURSnV",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        380,
+        0
+      ],
+      "id": "1e4ab207-f4fc-4f22-8a14-42f0e3862326",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "sendTo": "=sureshshyamala95026@gmail.com",
+        "subject": "Successs",
+        "message": "yes",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        600,
+        0
+      ],
+      "id": "b2b51a3b-d10d-42f1-844c-0af43d57a4fc",
+      "name": "Gmail2",
+      "webhookId": "9d5efdf7-7cb9-4683-ae97-9044ada331d9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6U1ldeYrY6OURSnV",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Gmail": [
+      {
+        "json": {
+          "name": "First item",
+          "code": 1
+        }
+      },
+      {
+        "json": {
+          "name": "Second item",
+          "code": 2
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Gmail1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Gmail2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "128472ab-ea92-4d55-ab00-28bc954a6f98",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b889df4dd50fab0677d4196a581789cdc1d2aea530f4e301bf4b32cb4ff39f0c"
+  },
+  "id": "CjlEjIbsV33OqOCx",
+  "tags": [
+    {
+      "name": "automated",
+      "id": "Fm0MkEIfKGfiNy6c",
+      "createdAt": "2025-06-16T06:22:43.134Z",
+      "updatedAt": "2025-06-16T06:22:43.134Z"
+    },
+    {
+      "name": "leaddistribution",
+      "id": "TnpyN6bECsS4gBDc",
+      "createdAt": "2025-06-16T06:22:35.027Z",
+      "updatedAt": "2025-06-16T06:22:35.027Z"
+    },
+    {
+      "name": "email",
+      "id": "Y55Ifbf6ICMhBUG5",
+      "createdAt": "2025-06-16T06:22:24.729Z",
+      "updatedAt": "2025-06-16T06:22:24.729Z"
+    },
+    {
+      "name": "jobfilter",
+      "id": "vZ3lkrnHtDtW4YKl",
+      "createdAt": "2025-06-16T06:22:47.762Z",
+      "updatedAt": "2025-06-16T06:22:47.762Z"
+    }
+  ]
+}
